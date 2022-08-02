@@ -38,7 +38,7 @@ public class FireCalc {
         incomeGrowth = (scanner.nextDouble()/100);
         System.out.println("Income saved(%): ");
         incomeSaved = (scanner.nextDouble()/100);
-        System.out.println("Planned spending when retired(to maintain current lifestyle: "+(Math.round(((income-(income*incomeSaved))*100)/100 ))+"): ");
+        System.out.println("Planned spending when retired(to maintain current lifestyle: "+(Math.round(((income-(income*incomeSaved))*100)/100))+"): ");
         retirementSpending = scanner.nextDouble();
         System.out.println("Excepted investment growth rate(Market average is 10%): ");
         investmentGrowthRate = (scanner.nextDouble()/100);
@@ -55,9 +55,9 @@ public class FireCalc {
             System.out.println("Congrats! You are on course to retire at "+retireAge+".");       
         }
         else{
-            double adjustedRetirementSpending = (retirementSpending)/(Math.pow(1+costOfLivingGrowthRate, retireAge));
+            double adjustedRetirementSpending = (totalSaved/25)/(Math.pow(1+costOfLivingGrowthRate, yearsToGrow));
             System.out.println("You are not on course to retire at "+retireAge+"! You need to either:");
-            System.out.println("Live off of $"+(totalSaved/25.0)+" a year(the equivalent of $"+adjustedRetirementSpending+" today)");
+            System.out.println("Live off of $"+Math.round(((totalSaved/25.0)*100)/100)+" a year(the equivalent of $"+Math.round(((adjustedRetirementSpending)*100)/100 )+" today)");
             int additionalYears = 0;
             double additionalSavings = 0.0;
             double tempFund = 0;
@@ -75,7 +75,7 @@ public class FireCalc {
                 tempFund = loopResponse[0];
                 neededToRetire = loopResponse[1]*25.0;
             }
-            System.out.println("Save "+(Math.round(((incomeSaved+additionalSavings)*100)*10)/10)+"% instead of "+(incomeSaved*100)+"%");
+            System.out.println("Save "+(double)(Math.round(((incomeSaved+additionalSavings)*100)*10))/10+"% instead of "+(incomeSaved*100)+"%");
         }
     }
 
