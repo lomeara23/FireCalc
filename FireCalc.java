@@ -18,12 +18,12 @@ public class FireCalc {
     public static void main(String[] args) {
         calculator();
     }
-    public static void calculator(){
+    private static void calculator(){
         getInputs();
         calculate();
     }
 
-    public static void getInputs(){
+    private static void getInputs(){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Start Age: ");
         startAge = scanner.nextInt();
@@ -47,7 +47,7 @@ public class FireCalc {
         scanner.close();
     }
 
-    public static void calculate() {
+    private static void calculate() {
         double[] loopResponse = compoundLoop(yearsToGrow,income,incomeSaved,retirementSpending);
         double totalSaved = loopResponse[0];
         double neededToRetire = loopResponse[1]*25.0;
@@ -79,7 +79,7 @@ public class FireCalc {
         }
     }
 
-    public static double[] compoundLoop(int totalYears, double tempIncome, double savingRate, double plannedRetirementSpending){
+    private static double[] compoundLoop(int totalYears, double tempIncome, double savingRate, double plannedRetirementSpending){
         double cashTotal = principal;
         double incomeInvested = tempIncome*(savingRate);
         for(int year = 0 ; year < (totalYears) ; year++){
