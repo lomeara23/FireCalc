@@ -38,39 +38,48 @@ public class FireCalc {
         incomeGrowth = (scanner.nextDouble()/100);
         System.out.println("Income saved(%): ");
         incomeSaved = (scanner.nextDouble()/100);
-        System.out.println("Planned spending when retired(to maintain current lifestyle: "+(Math.round((income-incomeSaved)*100)/100 )+"): ");
+        System.out.println("Planned spending when retired(to maintain current lifestyle: "+(Math.round(((income-(income*incomeSaved))*100)/100 ))+"): ");
         retirementSpending = scanner.nextDouble();
+        System.out.println("Excepted investment growth rate(Market average is 10%): ");
+        investmentGrowthRate = (scanner.nextDouble()/100);
+        System.out.println("Expected Cost of Living growth rate(Average is 3%): ");
+        costOfLivingGrowthRate = (scanner.nextDouble()/100);
         scanner.close();
     }
 
     public static void calculate() {
-        double totalSaved = compoundLoop(yearsToGrow,income,incomeSaved);
-        double neededToRetire = retirementSpending*25.0;
+        double[] loopResponse = compoundLoop(yearsToGrow,income,incomeSaved,retirementSpending);
+        double totalSaved = loopResponse[0];
+        double neededToRetire = loopResponse[1]*25.0;
         if(totalSaved > neededToRetire){
             System.out.println("Congrats! You are on course to retire at "+retireAge+".");       
         }
         else{
+            double adjustedRetirementSpending = (retirementSpending)/(Math.pow(1+costOfLivingGrowthRate, retireAge));
             System.out.println("You are not on course to retire at "+retireAge+"! You need to either:");
+            System.out.println("Live off of $"+(totalSaved/25.0)+" a year(the equivalent of $"+adjustedRetirementSpending+" today)");
             int additionalYears = 0;
             double additionalSavings = 0.0;
             double tempFund = 0;
             while(tempFund < neededToRetire){
                 additionalYears++;
-                tempFund = compoundLoop(yearsToGrow+additionalYears,income,incomeSaved);
+                loopResponse = compoundLoop((yearsToGrow+additionalYears),income,incomeSaved,retirementSpending);
+                tempFund = loopResponse[0];
+                neededToRetire = loopResponse[1]*25.0;
             }
             System.out.println("Work an additional "+additionalYears+" years(To the age of "+(additionalYears+retireAge)+")");
             tempFund = 0;
             while(tempFund < neededToRetire){
                 additionalSavings += .01;
-                tempFund = compoundLoop(yearsToGrow,income,(incomeSaved+additionalSavings));
+                loopResponse = compoundLoop(yearsToGrow,income,(incomeSaved+additionalSavings),retirementSpending);
+                tempFund = loopResponse[0];
+                neededToRetire = loopResponse[1]*25.0;
             }
-            System.out.println("Save "+((incomeSaved+additionalSavings)*100)+"% instead of "+(incomeSaved*100)+"%");
+            System.out.println("Save "+(Math.round(((incomeSaved+additionalSavings)*100)*10)/10)+"% instead of "+(incomeSaved*100)+"%");
         }
     }
 
-    public static double compoundLoop(int totalYears, double tempIncome, double savingRate){
-        investmentGrowthRate = .07;
-
+    public static double[] compoundLoop(int totalYears, double tempIncome, double savingRate, double plannedRetirementSpending){
         double cashTotal = principal;
         double incomeInvested = tempIncome*(savingRate);
         for(int year = 0 ; year < (totalYears) ; year++){
@@ -80,7 +89,11 @@ public class FireCalc {
             }
             tempIncome *= 1+(incomeGrowth);
             incomeInvested = tempIncome*(savingRate);
+            plannedRetirementSpending *= (1+costOfLivingGrowthRate);
         }
-        return cashTotal;
+        double[] loopData = {cashTotal,plannedRetirementSpending};
+        return loopData;
     }
+
+
 }
